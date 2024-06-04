@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\QuanLyKhoaHoc.Application\QuanLyKhoaHoc.Application.csproj" />
     <ProjectReference Include="..\quanlykhoahoc.client\quanlykhoahoc.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
