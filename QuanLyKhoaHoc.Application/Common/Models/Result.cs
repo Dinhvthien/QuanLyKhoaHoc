@@ -1,24 +1,26 @@
-﻿namespace QuanLyKhoaHoc.Application.Common.Models;
+﻿using QuanLyKhoaHoc.Domain;
+
+namespace QuanLyKhoaHoc.Application.Common.Models;
 
 public class Result
 {
-    internal Result(bool succeeded, IEnumerable<string> errors)
+    internal Result(ResultStatus status, string? error)
     {
-        Succeeded = succeeded;
-        Errors = errors.ToArray();
+        Status = status;
+        Error = error;
     }
 
-    public bool Succeeded { get; init; }
+    public ResultStatus Status { get; init; }
 
-    public string[] Errors { get; init; }
+    public string? Error { get; init; }
 
     public static Result Success()
     {
-        return new Result(true, Array.Empty<string>());
+        return new Result(ResultStatus.Succeess, null);
     }
 
-    public static Result Failure(IEnumerable<string> errors)
+    public static Result Failure(string errors)
     {
-        return new Result(false, errors);
+        return new Result(ResultStatus.Failure, errors);
     }
 }

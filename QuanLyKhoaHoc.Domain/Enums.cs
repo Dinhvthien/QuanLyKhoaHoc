@@ -14,4 +14,9 @@
     {
 
     }
+
+    public enum ResultStatus
+    {
+        Succeess, Failure, NotFound
+    }
 }

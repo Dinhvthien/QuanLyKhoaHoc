@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuanLyKhoaHoc.Domain.Entities;
-using System.Collections.Generic;
 
 namespace QuanLyKhoaHoc.Application.Common.Interfaces
 {

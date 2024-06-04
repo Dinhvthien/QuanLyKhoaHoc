@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QuanLyKhoaHoc.Application.Common.Interfaces;
 using QuanLyKhoaHoc.Domain.Entities;
 using System.Reflection;
 
 namespace QuanLyKhoaHoc.Infrastructure.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         //public ApplicationDbContext()
         //{
-            
+
         //}
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -23,7 +24,6 @@ namespace QuanLyKhoaHoc.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
