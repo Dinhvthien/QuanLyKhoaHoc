@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using QuanLyKhoaHoc.Application.Common.Extensions;
 using QuanLyKhoaHoc.Application.Common.Interfaces;
 using QuanLyKhoaHoc.Application.Common.Mappings;
 using QuanLyKhoaHoc.Application.Common.Models;
 using QuanLyKhoaHoc.Domain.Entities;
-using System.Linq;
 
 namespace QuanLyKhoaHoc.Application.Services
 {
@@ -14,7 +14,7 @@ namespace QuanLyKhoaHoc.Application.Services
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public SubjectService(IApplicationDbContext context,IMapper mapper)
+        public SubjectService(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -24,11 +24,13 @@ namespace QuanLyKhoaHoc.Application.Services
         {
             try
             {
-                await _context.Subjects.AddAsync(_mapper.Map<Subject>(entity));
+                var subject = _mapper.Map<Subject>(entity);
+                await _context.Subjects.AddAsync(subject, cancellationToken);
 
                 var result = await _context.SaveChangesAsync(cancellationToken);
 
-                if (result != 1) {
+                if (result != 1)
+                {
                     return Result.Failure("Lỗi Gì Đó");
                 }
 
@@ -44,9 +46,12 @@ namespace QuanLyKhoaHoc.Application.Services
         {
             try
             {
-                var subject = _context.Subjects.FirstOrDefault(c => c.Id == id);
+                var subject = await _context.Subjects.FindAsync(new object[] { id }, cancellationToken);
 
-                if (subject == null) return new Result(Domain.ResultStatus.NotFound, "Không Tìm Thấy");
+                if (subject == null)
+                {
+                    return new Result(Domain.ResultStatus.NotFound, "Không Tìm Thấy");
+                }
 
                 _context.Subjects.Remove(subject);
 
@@ -67,9 +72,12 @@ namespace QuanLyKhoaHoc.Application.Services
 
         public async Task<SubjectMapping?> GetSubject(int id, CancellationToken cancellationToken)
         {
-            var subject = await _context.Subjects.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+            var subject = await _context.Subjects.FindAsync(new object[] { id }, cancellationToken);
 
-            if (subject == null) return null;
+            if (subject == null)
+            {
+                return null;
+            }
 
             return _mapper.Map<SubjectMapping>(subject);
         }
@@ -80,9 +88,10 @@ namespace QuanLyKhoaHoc.Application.Services
 
             var totalCount = await subjects.CountAsync(cancellationToken);
 
-            subjects = subjects.Skip((query.Page - 1) * query.PageSize).Take(query.PageSize);
-
-            var data = await subjects.ProjectTo<SubjectMapping>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken);
+            var data = await subjects
+                .ApplyQuery(query)
+                .ProjectTo<SubjectMapping>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
 
             return new PagingModel<SubjectMapping>(data, totalCount, query.Page, query.PageSize);
         }
@@ -91,13 +100,21 @@ namespace QuanLyKhoaHoc.Application.Services
         {
             try
             {
-                if (entity.Id != id) return Result.Failure("ID Phải Giống Nhau");
+                if (entity.Id != id)
+                {
+                    return Result.Failure("ID Phải Giống Nhau");
+                }
 
-                var subject = await _context.Subjects.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+                var subject = await _context.Subjects.FindAsync(new object[] { id }, cancellationToken);
 
-                if (subject == null) return new Result(Domain.ResultStatus.NotFound, "Không Tìm Thấy");
+                if (subject == null)
+                {
+                    return new Result(Domain.ResultStatus.NotFound, "Không Tìm Thấy");
+                }
 
-                _context.Subjects.Update(_mapper.Map<Subject>(entity));
+                _mapper.Map(entity, subject);
+
+                _context.Subjects.Update(subject);
 
                 var result = await _context.SaveChangesAsync(cancellationToken);
 
