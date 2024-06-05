@@ -11,7 +11,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AppShell header={{ height: 75 }}>
+    <AppShell header={{ height: 70 }}>
       <AppShell.Header>
         <Container size={"xl"}>
           <RootHeader />

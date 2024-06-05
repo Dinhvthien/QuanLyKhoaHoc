@@ -86,14 +86,14 @@ namespace QuanLyKhoaHoc.Application.Services
         {
             var subjects = _context.Subjects.AsNoTracking();
 
-            var totalCount = await subjects.CountAsync(cancellationToken);
+            var totalCount = await subjects.ApplyQuery(query, applyPagination: false).CountAsync();
 
             var data = await subjects
                 .ApplyQuery(query)
                 .ProjectTo<SubjectMapping>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
-            return new PagingModel<SubjectMapping>(data, totalCount, query.Page, query.PageSize);
+            return new PagingModel<SubjectMapping>(data, totalCount, query.Page ?? 1, query.PageSize ?? 10);
         }
 
         public async Task<Result> UpdateSubject(int id, SubjectUpdate entity, CancellationToken cancellationToken)

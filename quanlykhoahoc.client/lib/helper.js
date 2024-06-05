@@ -1,8 +1,10 @@
-'use client';
+"use client";
 
-import { toast } from 'react-toastify';
-import { useMemo } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { toast } from "react-toastify";
+import { useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import queryString from "query-string";
+import { useDebouncedCallback } from "@mantine/hooks";
 
 async function TryFetch(action) {
   try {
@@ -15,7 +17,7 @@ async function TryFetch(action) {
           toast.warning(...errors[title]);
         }
       } catch (e) {
-        toast.error('Lỗi Gì Đó');
+        toast.error("Lỗi Gì Đó");
       }
     }
 
@@ -26,8 +28,8 @@ async function TryFetch(action) {
 export async function handleSubmit(action, message) {
   toast.promise(TryFetch(action), {
     success: message,
-    error: 'Vui Lòng Kiểm Tra Lại Thông Tin',
-    pending: 'Đang Tải ...',
+    error: "Vui Lòng Kiểm Tra Lại Thông Tin",
+    pending: "Đang Tải ...",
   });
 }
 
@@ -44,12 +46,31 @@ export function useQuery() {
       sorts: sorts,
       page: page,
       pageSize: pageSize,
-      commentId: commentId
+      commentId: commentId,
     };
   }, [filters, sorts, page, pageSize, commentId]);
 
   return query;
 }
+
+export const useFilter = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const updateFilter = useDebouncedCallback((field, val) => {
+    const url = new URLSearchParams(searchParams);
+
+    if (val) {
+      url.set(field, val);
+    } else {
+      url.delete(field);
+    }
+
+    router.push(`?${url.toString()}`);
+  }, 1000);
+
+  return updateFilter;
+};
 
 export function useSort() {
   const router = useRouter();
@@ -57,24 +78,28 @@ export function useSort() {
   const handleSort = useMemo(() => {
     return (field, remove = null) => {
       const parsed = queryString.parse(window.location.search);
-      let sorts = parsed.sorts ? parsed.sorts.split(',') : [];
+      let sorts = parsed.sorts ? parsed.sorts.split(",") : [];
 
-      const index = sorts.findIndex((sort) => sort === field || sort === `-${field}`);
+      const index = sorts.findIndex(
+        (sort) => sort === field || sort === `-${field}`
+      );
 
       if (index !== -1) {
         if (remove) {
           sorts.splice(index, 1);
         } else {
-          sorts[index] = sorts[index].startsWith('-') ? sorts[index].substr(1) : `-${sorts[index]}`;
+          sorts[index] = sorts[index].startsWith("-")
+            ? sorts[index].substr(1)
+            : `-${sorts[index]}`;
         }
       } else {
         sorts.push(`-${field}`);
       }
 
-      const newSorts = sorts.join(',');
+      const newSorts = sorts.join(",");
       const newQuery = { ...parsed, sorts: newSorts || undefined };
       const newQueryString = queryString.stringify(newQuery);
-      router.push(`?${newQueryString.replace(/%2C/g, ',')}`);
+      router.push(`?${newQueryString.replace(/%2C/g, ",")}`);
     };
   }, [router]);
 

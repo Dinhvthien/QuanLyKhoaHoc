@@ -54,6 +54,11 @@ export default function CourseSubjectCreate() {
           onClick={() =>
             handleSubmit(async () => {
               await SubjectService.createSubject(subject as SubjectCreate);
+              setSubject({
+                name: "",
+                symbol: "",
+                isActive: true,
+              });
             }, "Thêm Thành Công")
           }
         >

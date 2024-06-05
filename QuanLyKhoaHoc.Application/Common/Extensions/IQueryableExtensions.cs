@@ -5,9 +5,9 @@ namespace QuanLyKhoaHoc.Application.Common.Extensions
 {
     public static class IQueryableExtensions
     {
-        public static IQueryable<T> ApplyQuery<T>(this IQueryable<T> source, QueryModel queryParameters)
+        public static IQueryable<T> ApplyQuery<T>(this IQueryable<T> source, QueryModel queryParameters, bool applyPagination = true, bool applyFilter = true, bool applySort = true)
         {
-            if (!string.IsNullOrEmpty(queryParameters.Filters))
+            if (applyFilter && !string.IsNullOrEmpty(queryParameters.Filters))
             {
                 var filters = queryParameters.Filters.Split(',');
                 foreach (var filter in filters)
@@ -16,7 +16,7 @@ namespace QuanLyKhoaHoc.Application.Common.Extensions
                 }
             }
 
-            if (!string.IsNullOrEmpty(queryParameters.Sorts))
+            if (applySort && !string.IsNullOrEmpty(queryParameters.Sorts))
             {
                 var sorts = queryParameters.Sorts.Split(',');
                 foreach (var sort in sorts)
@@ -25,9 +25,16 @@ namespace QuanLyKhoaHoc.Application.Common.Extensions
                 }
             }
 
-            return source
-                .Skip((queryParameters.Page - 1) * queryParameters.PageSize)
-                .Take(queryParameters.PageSize);
+            // Kiểm tra applyPagination trước khi thực hiện phân trang
+            if (applyPagination && queryParameters.Page.HasValue && queryParameters.PageSize.HasValue)
+            {
+                int page = queryParameters.Page.Value;
+                int pageSize = queryParameters.PageSize.Value;
+
+                source = source.Skip((page - 1) * pageSize).Take(pageSize);
+            }
+
+            return source;
         }
 
         private static IQueryable<T> ApplyFilter<T>(IQueryable<T> source, string filter)

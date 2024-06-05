@@ -1,6 +1,6 @@
-import { AppShell, Avatar, Burger, Group } from "@mantine/core";
+import { AppShell, Avatar, Burger, Group, Loader } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import React from "react";
+import React, { Suspense } from "react";
 import { DashboardNavbar } from "../Navbar/Dashboard/DashboardNavbar";
 
 export default function DashboardLayout({
@@ -21,13 +21,15 @@ export default function DashboardLayout({
       <AppShell.Header>
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Avatar ms={"auto"}/>
+          <Avatar ms={"auto"} />
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p="md">
         <DashboardNavbar />
       </AppShell.Navbar>
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main>
+        <Suspense>{children}</Suspense>
+      </AppShell.Main>
       <AppShell.Footer p="md">Footer</AppShell.Footer>
     </AppShell>
   );

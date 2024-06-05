@@ -8,25 +8,31 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
+import followIfLoginRedirect from '../components/api-authorization/followIfLoginRedirect';
+
 export class SubjectClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        this.http = http ? http : window as any;
-        this.baseUrl = baseUrl ?? "";
+        this.http = http ? http : (typeof window !== 'undefined' ? window : { fetch }) as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getSubjects(filters: string | null | undefined, sorts: string | null | undefined, page: number | null | undefined, pageSize: number | null | undefined): Promise<PagingModelOfSubjectMapping> {
+    getSubjects(filters: string | null | undefined, sorts: string | null | undefined, page: number | undefined, pageSize: number | undefined): Promise<PagingModelOfSubjectMapping> {
         let url_ = this.baseUrl + "/api/Subject?";
         if (filters !== undefined && filters !== null)
             url_ += "Filters=" + encodeURIComponent("" + filters) + "&";
         if (sorts !== undefined && sorts !== null)
             url_ += "Sorts=" + encodeURIComponent("" + sorts) + "&";
-        if (page !== undefined && page !== null)
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
             url_ += "Page=" + encodeURIComponent("" + page) + "&";
-        if (pageSize !== undefined && pageSize !== null)
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
             url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -43,6 +49,7 @@ export class SubjectClient {
     }
 
     protected processGetSubjects(response: Response): Promise<PagingModelOfSubjectMapping> {
+        followIfLoginRedirect(response);
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -81,6 +88,7 @@ export class SubjectClient {
     }
 
     protected processCreateSubject(response: Response): Promise<Result> {
+        followIfLoginRedirect(response);
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -123,6 +131,7 @@ export class SubjectClient {
     }
 
     protected processUpdateSubject(response: Response): Promise<Result> {
+        followIfLoginRedirect(response);
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -161,6 +170,7 @@ export class SubjectClient {
     }
 
     protected processDeleteSubject(response: Response): Promise<Result> {
+        followIfLoginRedirect(response);
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -198,6 +208,7 @@ export class SubjectClient {
     }
 
     protected processGetSubject(response: Response): Promise<SubjectMapping> {
+        followIfLoginRedirect(response);
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -221,6 +232,7 @@ export class PagingModelOfSubjectMapping implements IPagingModelOfSubjectMapping
     pageNumber?: number;
     totalPages?: number;
     totalCount?: number;
+    pageSize?: number;
     hasPreviousPage?: boolean;
     hasNextPage?: boolean;
 
@@ -243,6 +255,7 @@ export class PagingModelOfSubjectMapping implements IPagingModelOfSubjectMapping
             this.pageNumber = _data["pageNumber"];
             this.totalPages = _data["totalPages"];
             this.totalCount = _data["totalCount"];
+            this.pageSize = _data["pageSize"];
             this.hasPreviousPage = _data["hasPreviousPage"];
             this.hasNextPage = _data["hasNextPage"];
         }
@@ -265,6 +278,7 @@ export class PagingModelOfSubjectMapping implements IPagingModelOfSubjectMapping
         data["pageNumber"] = this.pageNumber;
         data["totalPages"] = this.totalPages;
         data["totalCount"] = this.totalCount;
+        data["pageSize"] = this.pageSize;
         data["hasPreviousPage"] = this.hasPreviousPage;
         data["hasNextPage"] = this.hasNextPage;
         return data;
@@ -276,6 +290,7 @@ export interface IPagingModelOfSubjectMapping {
     pageNumber?: number;
     totalPages?: number;
     totalCount?: number;
+    pageSize?: number;
     hasPreviousPage?: boolean;
     hasNextPage?: boolean;
 }

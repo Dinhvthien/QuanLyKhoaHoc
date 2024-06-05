@@ -5,7 +5,6 @@ import { useForm } from "@mantine/form";
 import {
   TextInput,
   PasswordInput,
-  Text,
   Paper,
   Group,
   Button,
@@ -39,11 +38,7 @@ export default function Login() {
   return (
     <Flex h={"100vh"} justify={"center"} align={"center"}>
       <Paper radius="md" p="xl" withBorder w={360}>
-        <Text size="lg" fw={500}>
-          Welcome to Mantine, {type} with
-        </Text>
-
-        <Group grow mb="md" mt="md">
+        <Group grow mb="md">
           <IconBrandGoogle radius="xl">Google</IconBrandGoogle>
           <IconBrandTwitter radius="xl">Twitter</IconBrandTwitter>
         </Group>

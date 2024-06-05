@@ -1,51 +1,39 @@
-import { useState } from "react";
-import { Group, Code } from "@mantine/core";
-import {
-  IconBellRinging,
-  IconFingerprint,
-  IconKey,
-  IconSettings,
-  Icon2fa,
-  IconDatabaseImport,
-  IconReceipt2,
-} from "@tabler/icons-react";
-import { MantineLogo } from "@mantinex/mantine-logo";
+import { Group, Code, Text } from "@mantine/core";
+import { IconBellRinging, IconReceipt2 } from "@tabler/icons-react";
 import classes from "./DashboardNavbar.module.css";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const data = [
-  { link: "", label: "Notifications", icon: IconBellRinging },
-  { link: "", label: "Billing", icon: IconReceipt2 },
-  { link: "", label: "Security", icon: IconFingerprint },
-  { link: "", label: "SSH Keys", icon: IconKey },
-  { link: "", label: "Databases", icon: IconDatabaseImport },
-  { link: "", label: "Authentication", icon: Icon2fa },
-  { link: "", label: "Other Settings", icon: IconSettings },
+  { link: "/dashboard", label: "Quản Trị", icon: IconBellRinging },
+  { link: "/dashboard/course/subject", label: "Chủ Đề", icon: IconReceipt2 },
 ];
 
 export function DashboardNavbar() {
-  const [active, setActive] = useState("Billing");
+  const pathname = usePathname();
 
   const links = data.map((item) => (
-    <a
+    <Link
       className={classes.link}
-      data-active={item.label === active || undefined}
+      data-active={pathname === item.link || undefined}
       href={item.link}
       key={item.label}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(item.label);
-      }}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
       <span>{item.label}</span>
-    </a>
+    </Link>
   ));
 
   return (
     <nav className={classes.navbar}>
       <div className={classes.navbarMain}>
         <Group className={classes.header} justify="space-between">
-          <MantineLogo size={28} />
+          <Link href={"/"} style={{ textDecoration: " none" }}>
+            <Text fw={"bold"}>
+              Trang Chủ
+            </Text>
+          </Link>
+
           <Code fw={700}>v1</Code>
         </Group>
         {links}

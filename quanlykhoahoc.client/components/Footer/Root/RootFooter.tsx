@@ -15,7 +15,7 @@ export function RootFooter() {
       <Container className={classes.inner} size={"xl"}>
         <Link href={"/"} style={{ textDecoration: " none" }}>
           <Text fw={"bold"} color="dark">
-            Nhóm Bar
+            Quản Lý Khóa Học
           </Text>
         </Link>
         <Group

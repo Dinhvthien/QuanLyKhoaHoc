@@ -5,8 +5,12 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: `${process.env.WEBSITE_URL}/api/:path*`,
+        source: "/api/:path*",
+        destination: `${
+          process.env.NODE_ENV == "development"
+            ? process.env.WEBSITE_URL_DEV
+            : process.env.WEBSITE_URL_RES
+        }/api/:path*`,
       },
     ];
   },

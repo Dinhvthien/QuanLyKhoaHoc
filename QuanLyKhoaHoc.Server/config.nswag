@@ -73,7 +73,7 @@
       "inlineNamedDictionaries": false,
       "inlineNamedAny": false,
       "includeHttpContext": false,
-      "templateDirectory": null,
+      "templateDirectory": "Templates",
       "serviceHost": null,
       "serviceSchemes": null,
       "output": "../quanlykhoahoc.client/app/web-api-client.ts",

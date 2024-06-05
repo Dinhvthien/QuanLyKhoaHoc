@@ -9,9 +9,9 @@ namespace QuanLyKhoaHoc.Application.Common.Models
         public string? Sorts { get; set; }
 
         [Range(1, int.MaxValue)]
-        public int Page { get; set; } = 1;
+        public int? Page { get; set; }
 
         [Range(1, int.MaxValue)]
-        public int PageSize { get; set; } = 10;
+        public int? PageSize { get; set; }
     }
 }

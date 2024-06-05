@@ -38,8 +38,7 @@
               "type": "integer",
               "format": "int32",
               "maximum": 2147483647.0,
-              "minimum": 1.0,
-              "nullable": true
+              "minimum": 1.0
             },
             "x-position": 3
           },
@@ -50,8 +49,7 @@
               "type": "integer",
               "format": "int32",
               "maximum": 2147483647.0,
-              "minimum": 1.0,
-              "nullable": true
+              "minimum": 1.0
             },
             "x-position": 4
           }
@@ -224,6 +222,10 @@
             "format": "int32"
           },
           "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
             "type": "integer",
             "format": "int32"
           },
