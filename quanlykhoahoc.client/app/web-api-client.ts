@@ -10,6 +10,219 @@
 
 import followIfLoginRedirect from '../components/api-authorization/followIfLoginRedirect';
 
+export class CourseClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : (typeof window !== 'undefined' ? window : { fetch }) as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getCourses(filters: string | null | undefined, sorts: string | null | undefined, page: number | null | undefined, pageSize: number | null | undefined): Promise<PagingModelOfCourseMapping> {
+        let url_ = this.baseUrl + "/api/Course?";
+        if (filters !== undefined && filters !== null)
+            url_ += "Filters=" + encodeURIComponent("" + filters) + "&";
+        if (sorts !== undefined && sorts !== null)
+            url_ += "Sorts=" + encodeURIComponent("" + sorts) + "&";
+        if (page !== undefined && page !== null)
+            url_ += "Page=" + encodeURIComponent("" + page) + "&";
+        if (pageSize !== undefined && pageSize !== null)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetCourses(_response);
+        });
+    }
+
+    protected processGetCourses(response: Response): Promise<PagingModelOfCourseMapping> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagingModelOfCourseMapping.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PagingModelOfCourseMapping>(null as any);
+    }
+
+    createCourse(entity: CourseCreate): Promise<Result> {
+        let url_ = this.baseUrl + "/api/Course";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(entity);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateCourse(_response);
+        });
+    }
+
+    protected processCreateCourse(response: Response): Promise<Result> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Result>(null as any);
+    }
+
+    updateCourse(id: number | undefined, entity: CourseUpdate): Promise<Result> {
+        let url_ = this.baseUrl + "/api/Course?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(entity);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateCourse(_response);
+        });
+    }
+
+    protected processUpdateCourse(response: Response): Promise<Result> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Result>(null as any);
+    }
+
+    deleteCourse(id: number | undefined): Promise<Result> {
+        let url_ = this.baseUrl + "/api/Course?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteCourse(_response);
+        });
+    }
+
+    protected processDeleteCourse(response: Response): Promise<Result> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Result>(null as any);
+    }
+
+    getCourse(id: number): Promise<CourseMapping> {
+        let url_ = this.baseUrl + "/api/Course/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetCourse(_response);
+        });
+    }
+
+    protected processGetCourse(response: Response): Promise<CourseMapping> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourseMapping.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<CourseMapping>(null as any);
+    }
+}
+
 export class SubjectClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -20,19 +233,15 @@ export class SubjectClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getSubjects(filters: string | null | undefined, sorts: string | null | undefined, page: number | undefined, pageSize: number | undefined): Promise<PagingModelOfSubjectMapping> {
+    getSubjects(filters: string | null | undefined, sorts: string | null | undefined, page: number | null | undefined, pageSize: number | null | undefined): Promise<PagingModelOfSubjectMapping> {
         let url_ = this.baseUrl + "/api/Subject?";
         if (filters !== undefined && filters !== null)
             url_ += "Filters=" + encodeURIComponent("" + filters) + "&";
         if (sorts !== undefined && sorts !== null)
             url_ += "Sorts=" + encodeURIComponent("" + sorts) + "&";
-        if (page === null)
-            throw new Error("The parameter 'page' cannot be null.");
-        else if (page !== undefined)
+        if (page !== undefined && page !== null)
             url_ += "Page=" + encodeURIComponent("" + page) + "&";
-        if (pageSize === null)
-            throw new Error("The parameter 'pageSize' cannot be null.");
-        else if (pageSize !== undefined)
+        if (pageSize !== undefined && pageSize !== null)
             url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -227,6 +436,329 @@ export class SubjectClient {
     }
 }
 
+export class PagingModelOfCourseMapping implements IPagingModelOfCourseMapping {
+    items?: CourseMapping[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    pageSize?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+
+    constructor(data?: IPagingModelOfCourseMapping) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(CourseMapping.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.pageSize = _data["pageSize"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
+        }
+    }
+
+    static fromJS(data: any): PagingModelOfCourseMapping {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagingModelOfCourseMapping();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["pageSize"] = this.pageSize;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        return data;
+    }
+}
+
+export interface IPagingModelOfCourseMapping {
+    items?: CourseMapping[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    pageSize?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+}
+
+export class CourseMapping implements ICourseMapping {
+    id?: number;
+    name?: string;
+    introduce?: string;
+    imageCourse?: string;
+    creatorId?: number;
+    code?: string;
+    price?: number;
+    totalCourseDuration?: number;
+    numberOfStudent?: number;
+    numberOfPurchases?: number;
+
+    constructor(data?: ICourseMapping) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.introduce = _data["introduce"];
+            this.imageCourse = _data["imageCourse"];
+            this.creatorId = _data["creatorId"];
+            this.code = _data["code"];
+            this.price = _data["price"];
+            this.totalCourseDuration = _data["totalCourseDuration"];
+            this.numberOfStudent = _data["numberOfStudent"];
+            this.numberOfPurchases = _data["numberOfPurchases"];
+        }
+    }
+
+    static fromJS(data: any): CourseMapping {
+        data = typeof data === 'object' ? data : {};
+        let result = new CourseMapping();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["introduce"] = this.introduce;
+        data["imageCourse"] = this.imageCourse;
+        data["creatorId"] = this.creatorId;
+        data["code"] = this.code;
+        data["price"] = this.price;
+        data["totalCourseDuration"] = this.totalCourseDuration;
+        data["numberOfStudent"] = this.numberOfStudent;
+        data["numberOfPurchases"] = this.numberOfPurchases;
+        return data;
+    }
+}
+
+export interface ICourseMapping {
+    id?: number;
+    name?: string;
+    introduce?: string;
+    imageCourse?: string;
+    creatorId?: number;
+    code?: string;
+    price?: number;
+    totalCourseDuration?: number;
+    numberOfStudent?: number;
+    numberOfPurchases?: number;
+}
+
+export class Result implements IResult {
+    status?: ResultStatus;
+    error?: string | undefined;
+
+    constructor(data?: IResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.error = _data["error"];
+        }
+    }
+
+    static fromJS(data: any): Result {
+        data = typeof data === 'object' ? data : {};
+        let result = new Result();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["error"] = this.error;
+        return data;
+    }
+}
+
+export interface IResult {
+    status?: ResultStatus;
+    error?: string | undefined;
+}
+
+export enum ResultStatus {
+    Succeess = "Succeess",
+    Failure = "Failure",
+    NotFound = "NotFound",
+    Forbidden = "Forbidden",
+}
+
+export class CourseCreate implements ICourseCreate {
+    name?: string;
+    introduce?: string;
+    imageCourse?: string;
+    code?: string;
+    price?: number;
+    totalCourseDuration?: number;
+    numberOfStudent?: number;
+    numberOfPurchases?: number;
+
+    constructor(data?: ICourseCreate) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.introduce = _data["introduce"];
+            this.imageCourse = _data["imageCourse"];
+            this.code = _data["code"];
+            this.price = _data["price"];
+            this.totalCourseDuration = _data["totalCourseDuration"];
+            this.numberOfStudent = _data["numberOfStudent"];
+            this.numberOfPurchases = _data["numberOfPurchases"];
+        }
+    }
+
+    static fromJS(data: any): CourseCreate {
+        data = typeof data === 'object' ? data : {};
+        let result = new CourseCreate();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["introduce"] = this.introduce;
+        data["imageCourse"] = this.imageCourse;
+        data["code"] = this.code;
+        data["price"] = this.price;
+        data["totalCourseDuration"] = this.totalCourseDuration;
+        data["numberOfStudent"] = this.numberOfStudent;
+        data["numberOfPurchases"] = this.numberOfPurchases;
+        return data;
+    }
+}
+
+export interface ICourseCreate {
+    name?: string;
+    introduce?: string;
+    imageCourse?: string;
+    code?: string;
+    price?: number;
+    totalCourseDuration?: number;
+    numberOfStudent?: number;
+    numberOfPurchases?: number;
+}
+
+export class CourseUpdate implements ICourseUpdate {
+    id?: number;
+    name?: string;
+    introduce?: string;
+    imageCourse?: string;
+    creatorId?: number;
+    code?: string;
+    price?: number;
+    totalCourseDuration?: number;
+    numberOfStudent?: number;
+    numberOfPurchases?: number;
+
+    constructor(data?: ICourseUpdate) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.introduce = _data["introduce"];
+            this.imageCourse = _data["imageCourse"];
+            this.creatorId = _data["creatorId"];
+            this.code = _data["code"];
+            this.price = _data["price"];
+            this.totalCourseDuration = _data["totalCourseDuration"];
+            this.numberOfStudent = _data["numberOfStudent"];
+            this.numberOfPurchases = _data["numberOfPurchases"];
+        }
+    }
+
+    static fromJS(data: any): CourseUpdate {
+        data = typeof data === 'object' ? data : {};
+        let result = new CourseUpdate();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["introduce"] = this.introduce;
+        data["imageCourse"] = this.imageCourse;
+        data["creatorId"] = this.creatorId;
+        data["code"] = this.code;
+        data["price"] = this.price;
+        data["totalCourseDuration"] = this.totalCourseDuration;
+        data["numberOfStudent"] = this.numberOfStudent;
+        data["numberOfPurchases"] = this.numberOfPurchases;
+        return data;
+    }
+}
+
+export interface ICourseUpdate {
+    id?: number;
+    name?: string;
+    introduce?: string;
+    imageCourse?: string;
+    creatorId?: number;
+    code?: string;
+    price?: number;
+    totalCourseDuration?: number;
+    numberOfStudent?: number;
+    numberOfPurchases?: number;
+}
+
 export class PagingModelOfSubjectMapping implements IPagingModelOfSubjectMapping {
     items?: SubjectMapping[];
     pageNumber?: number;
@@ -341,52 +873,6 @@ export interface ISubjectMapping {
     name?: string;
     symbol?: string;
     isActive?: boolean;
-}
-
-export class Result implements IResult {
-    status?: ResultStatus;
-    error?: string | undefined;
-
-    constructor(data?: IResult) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.status = _data["status"];
-            this.error = _data["error"];
-        }
-    }
-
-    static fromJS(data: any): Result {
-        data = typeof data === 'object' ? data : {};
-        let result = new Result();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["status"] = this.status;
-        data["error"] = this.error;
-        return data;
-    }
-}
-
-export interface IResult {
-    status?: ResultStatus;
-    error?: string | undefined;
-}
-
-export enum ResultStatus {
-    Succeess = "Succeess",
-    Failure = "Failure",
-    NotFound = "NotFound",
 }
 
 export class SubjectCreate implements ISubjectCreate {

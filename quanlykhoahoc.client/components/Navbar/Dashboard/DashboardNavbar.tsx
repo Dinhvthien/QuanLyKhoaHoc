@@ -1,11 +1,12 @@
 import { Group, Code, Text } from "@mantine/core";
-import { IconBellRinging, IconReceipt2 } from "@tabler/icons-react";
+import { Icon360View, IconBellRinging, IconReceipt2 } from "@tabler/icons-react";
 import classes from "./DashboardNavbar.module.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const data = [
   { link: "/dashboard", label: "Quản Trị", icon: IconBellRinging },
+  { link: "/dashboard/course", label: "Khóa Học", icon: Icon360View },
   { link: "/dashboard/course/subject", label: "Chủ Đề", icon: IconReceipt2 },
 ];
 

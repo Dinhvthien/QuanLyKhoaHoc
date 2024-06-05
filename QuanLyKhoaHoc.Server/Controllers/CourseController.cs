@@ -7,41 +7,41 @@ namespace QuanLyKhoaHoc.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SubjectController : ControllerBase
+    public class CourseController : ControllerBase
     {
-        private readonly ApplicationServiceBase<SubjectMapping, SubjectQuery, SubjectCreate, SubjectUpdate> _context;
+        private readonly ApplicationServiceBase<CourseMapping, CourseQuery, CourseCreate, CourseUpdate> _context;
 
-        public SubjectController(ApplicationServiceBase<SubjectMapping, SubjectQuery, SubjectCreate, SubjectUpdate> context)
+        public CourseController(ApplicationServiceBase<CourseMapping, CourseQuery, CourseCreate, CourseUpdate> context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<PagingModel<SubjectMapping>> GetSubjects([FromQuery] SubjectQuery query, CancellationToken cancellationToken)
+        public async Task<PagingModel<CourseMapping>> GetCourses([FromQuery] CourseQuery query, CancellationToken cancellationToken)
         {
             return await _context.Get(query, cancellationToken);
         }
 
         [HttpGet("{id}")]
-        public async Task<SubjectMapping?> GetSubject(int id, CancellationToken cancellationToken)
+        public async Task<CourseMapping?> GetCourse(int id, CancellationToken cancellationToken)
         {
             return await _context.Get(id, cancellationToken);
         }
 
         [HttpPost]
-        public async Task<Result> CreateSubject(SubjectCreate entity, CancellationToken cancellationToken)
+        public async Task<Result> CreateCourse(CourseCreate entity, CancellationToken cancellationToken)
         {
             return await _context.Create(entity, cancellationToken);
         }
 
         [HttpPut]
-        public async Task<Result> UpdateSubject(int id, SubjectUpdate entity, CancellationToken cancellationToken)
+        public async Task<Result> UpdateCourse(int id, CourseUpdate entity, CancellationToken cancellationToken)
         {
             return await _context.Update(id, entity, cancellationToken);
         }
 
         [HttpDelete]
-        public async Task<Result> DeleteSubject(int id, CancellationToken cancellationToken)
+        public async Task<Result> DeleteCourse(int id, CancellationToken cancellationToken)
         {
             return await _context.Delete(id, cancellationToken);
         }

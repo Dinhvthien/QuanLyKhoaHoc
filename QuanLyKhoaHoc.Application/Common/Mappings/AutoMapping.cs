@@ -7,13 +7,13 @@ namespace QuanLyKhoaHoc.Application.Common.Mappings
     {
         public AutoMapping()
         {
-            CreateMap<Subject, SubjectMapping>();
+            CreateMap<Subject, SubjectMapping>().ReverseMap();
             CreateMap<Subject, SubjectCreate>().ReverseMap();
             CreateMap<Subject, SubjectUpdate>().ReverseMap();
 
-            CreateMap<Course, CourseMapping>();
-            CreateMap<Course, CourseCreate>();
-            CreateMap<Course, CourseUpdate>();
+            CreateMap<Course, CourseMapping>().ReverseMap();
+            CreateMap<Course, CourseCreate>().ReverseMap();
+            CreateMap<Course, CourseUpdate>().ReverseMap();
         }
     }
 }

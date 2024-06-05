@@ -36,7 +36,7 @@ export async function handleSubmit(action, message) {
 export function useQuery() {
   const searchParams = useSearchParams();
 
-  const { filters, sorts, page, pageSize, commentId } = useMemo(() => {
+  const { filters, sorts, page, pageSize } = useMemo(() => {
     return Object.fromEntries(searchParams.entries());
   }, [searchParams]);
 
@@ -46,9 +46,8 @@ export function useQuery() {
       sorts: sorts,
       page: page,
       pageSize: pageSize,
-      commentId: commentId,
     };
-  }, [filters, sorts, page, pageSize, commentId]);
+  }, [filters, sorts, page, pageSize]);
 
   return query;
 }
@@ -104,4 +103,8 @@ export function useSort() {
   }, [router]);
 
   return handleSort;
+}
+
+export function formatCurrencyVND(amount) {
+  return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 }

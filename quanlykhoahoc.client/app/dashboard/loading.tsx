@@ -1,14 +1,12 @@
 "use client";
 
-import { Flex, Loader } from "@mantine/core";
 import DashboardLayout from "../../components/Layout/DashboardLayout";
+import Loading from "../../components/Loading/Loading";
 
-export default function Loading() {
+export default function DashboardLoading() {
   return (
     <DashboardLayout>
-      <Flex h={"100vh"} justify={"center"} align={"center"}>
-        <Loader />
-      </Flex>
+      <Loading />
     </DashboardLayout>
   );
 }

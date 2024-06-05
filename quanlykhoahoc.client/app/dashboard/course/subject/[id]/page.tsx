@@ -5,7 +5,6 @@ import DashboardLayout from "../../../../../components/Layout/DashboardLayout";
 import {
   ISubjectUpdate,
   SubjectClient,
-  SubjectCreate,
   SubjectUpdate,
 } from "../../../../web-api-client";
 import { handleSubmit } from "../../../../../lib/helper";

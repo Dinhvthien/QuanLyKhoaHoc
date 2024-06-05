@@ -2,7 +2,7 @@
 {
     public enum UserStatus
     {
-
+        Active
     }
 
     public enum Level
@@ -17,6 +17,6 @@
 
     public enum ResultStatus
     {
-        Succeess, Failure, NotFound
+        Succeess, Failure, NotFound, Forbidden
     }
 }

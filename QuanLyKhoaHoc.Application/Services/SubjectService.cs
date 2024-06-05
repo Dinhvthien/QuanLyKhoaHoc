@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using QuanLyKhoaHoc.Application.Common.Extensions;
+using QuanLyKhoaHoc.Application.Common;
 using QuanLyKhoaHoc.Application.Common.Interfaces;
 using QuanLyKhoaHoc.Application.Common.Mappings;
 using QuanLyKhoaHoc.Application.Common.Models;
@@ -9,25 +9,20 @@ using QuanLyKhoaHoc.Domain.Entities;
 
 namespace QuanLyKhoaHoc.Application.Services
 {
-    public class SubjectService : ISubjectService
+    public class SubjectService : ApplicationServiceBase<SubjectMapping, SubjectQuery, SubjectCreate, SubjectUpdate>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-
-        public SubjectService(IApplicationDbContext context, IMapper mapper)
+        public SubjectService(IApplicationDbContext context, IMapper mapper, IUser user) : base(context, mapper, user)
         {
-            _context = context;
-            _mapper = mapper;
         }
 
-        public async Task<Result> CreateSubject(SubjectCreate entity, CancellationToken cancellationToken)
+        public override async Task<Result> Create(SubjectCreate entity, CancellationToken cancellation)
         {
             try
             {
                 var subject = _mapper.Map<Subject>(entity);
-                await _context.Subjects.AddAsync(subject, cancellationToken);
+                await _context.Subjects.AddAsync(subject, cancellation);
 
-                var result = await _context.SaveChangesAsync(cancellationToken);
+                var result = await _context.SaveChangesAsync(cancellation);
 
                 if (result != 1)
                 {
@@ -42,11 +37,11 @@ namespace QuanLyKhoaHoc.Application.Services
             }
         }
 
-        public async Task<Result> DeleteSubject(int id, CancellationToken cancellationToken)
+        public override async Task<Result> Delete(int id, CancellationToken cancellation)
         {
             try
             {
-                var subject = await _context.Subjects.FindAsync(new object[] { id }, cancellationToken);
+                var subject = await _context.Subjects.FindAsync(new object[] { id }, cancellation);
 
                 if (subject == null)
                 {
@@ -55,7 +50,7 @@ namespace QuanLyKhoaHoc.Application.Services
 
                 _context.Subjects.Remove(subject);
 
-                var result = await _context.SaveChangesAsync(cancellationToken);
+                var result = await _context.SaveChangesAsync(cancellation);
 
                 if (result != 1)
                 {
@@ -70,9 +65,23 @@ namespace QuanLyKhoaHoc.Application.Services
             }
         }
 
-        public async Task<SubjectMapping?> GetSubject(int id, CancellationToken cancellationToken)
+        public override async Task<PagingModel<SubjectMapping>> Get(SubjectQuery query, CancellationToken cancellation)
         {
-            var subject = await _context.Subjects.FindAsync(new object[] { id }, cancellationToken);
+            var subjects = _context.Subjects.AsNoTracking();
+
+            var totalCount = await subjects.ApplyQuery(query, applyPagination: false).CountAsync();
+
+            var data = await subjects
+                .ApplyQuery(query)
+                .ProjectTo<SubjectMapping>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellation);
+
+            return new PagingModel<SubjectMapping>(data, totalCount, query.Page ?? 1, query.PageSize ?? 10);
+        }
+
+        public override async Task<SubjectMapping?> Get(int id, CancellationToken cancellation)
+        {
+            var subject = await _context.Subjects.FindAsync(new object[] { id }, cancellation);
 
             if (subject == null)
             {
@@ -82,21 +91,7 @@ namespace QuanLyKhoaHoc.Application.Services
             return _mapper.Map<SubjectMapping>(subject);
         }
 
-        public async Task<PagingModel<SubjectMapping>> GetSubjects(SubjectQuery query, CancellationToken cancellationToken)
-        {
-            var subjects = _context.Subjects.AsNoTracking();
-
-            var totalCount = await subjects.ApplyQuery(query, applyPagination: false).CountAsync();
-
-            var data = await subjects
-                .ApplyQuery(query)
-                .ProjectTo<SubjectMapping>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
-
-            return new PagingModel<SubjectMapping>(data, totalCount, query.Page ?? 1, query.PageSize ?? 10);
-        }
-
-        public async Task<Result> UpdateSubject(int id, SubjectUpdate entity, CancellationToken cancellationToken)
+        public override async Task<Result> Update(int id, SubjectUpdate entity, CancellationToken cancellation)
         {
             try
             {
@@ -105,7 +100,7 @@ namespace QuanLyKhoaHoc.Application.Services
                     return Result.Failure("ID Phải Giống Nhau");
                 }
 
-                var subject = await _context.Subjects.FindAsync(new object[] { id }, cancellationToken);
+                var subject = await _context.Subjects.FindAsync(new object[] { id }, cancellation);
 
                 if (subject == null)
                 {
@@ -116,7 +111,7 @@ namespace QuanLyKhoaHoc.Application.Services
 
                 _context.Subjects.Update(subject);
 
-                var result = await _context.SaveChangesAsync(cancellationToken);
+                var result = await _context.SaveChangesAsync(cancellation);
 
                 if (result != 1)
                 {
