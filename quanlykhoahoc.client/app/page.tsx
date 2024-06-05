@@ -1,6 +1,6 @@
 "use client";
 
-import { Center, Loader, Pagination, SimpleGrid } from "@mantine/core";
+import { Alert, Center, SimpleGrid } from "@mantine/core";
 import RootLayout from "../components/Layout/RootLayout";
 import { CourseCard } from "../components/Card/CourseCard";
 import useSWR from "swr";
@@ -29,19 +29,19 @@ export default function HomePage() {
     <RootLayout>
       {isLoading ? (
         <Loading />
+      ) : data?.items?.length && data.items.length >= 0 ? (
+        <>
+          <SimpleGrid cols={{ base: 1, lg: 3 }} spacing={"xs"}>
+            {data.items.map((item) => {
+              return <CourseCard key={item.code} data={item} />;
+            })}
+          </SimpleGrid>
+          <Center my={"md"}>
+            <AppPagination page={data.pageNumber} total={data.totalPages} />
+          </Center>
+        </>
       ) : (
-        data && (
-          <>
-            <SimpleGrid cols={{ base: 1, lg: 3 }} spacing={"xs"}>
-              {data.items.map((item) => {
-                return <CourseCard data={item} />;
-              })}
-            </SimpleGrid>
-            <Center my={"md"}>
-              <AppPagination page={data.pageNumber} total={data.totalPages} />
-            </Center>
-          </>
-        )
+        <Alert>Không Có Gì Ở Đây Cả</Alert>
       )}
     </RootLayout>
   );
