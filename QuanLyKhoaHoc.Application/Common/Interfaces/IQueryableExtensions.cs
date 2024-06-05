@@ -1,7 +1,7 @@
 ﻿using QuanLyKhoaHoc.Application.Common.Models;
 using System.Linq.Expressions;
 
-namespace QuanLyKhoaHoc.Application.Common.Extensions
+namespace QuanLyKhoaHoc.Application.Common.Interfaces
 {
     public static class IQueryableExtensions
     {

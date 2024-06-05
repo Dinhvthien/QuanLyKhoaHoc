@@ -1,20 +1,48 @@
 "use client";
 
-import { Center, Pagination, SimpleGrid } from "@mantine/core";
+import { Center, Loader, Pagination, SimpleGrid } from "@mantine/core";
 import RootLayout from "../components/Layout/RootLayout";
 import { CourseCard } from "../components/Card/CourseCard";
+import useSWR from "swr";
+import { CourseClient } from "./web-api-client";
+import { useQuery } from "../lib/helper";
+import Loading from "../components/Loading/Loading";
+import AppPagination from "../components/AppPagination/AppPagination";
 
 export default function HomePage() {
+  const CourseService = new CourseClient();
+
+  const query = useQuery();
+
+  const { data, isLoading } = useSWR(
+    `/api/course/${new URLSearchParams(query as any)}`,
+    () =>
+      CourseService.getCourses(
+        query.filters,
+        query.sorts,
+        query.page ? parseInt(query.page) : 1,
+        query.pageSize ? parseInt(query.pageSize) : 9
+      )
+  );
+
   return (
     <RootLayout>
-      <SimpleGrid cols={{ base: 1, lg: 3 }} spacing={"xs"}>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => {
-          return <CourseCard key={item} />;
-        })}
-      </SimpleGrid>
-      <Center my={"md"}>
-        <Pagination total={10} />
-      </Center>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        data && (
+          <>
+            <SimpleGrid cols={{ base: 1, lg: 3 }} spacing={"xs"}>
+              {data.items.map((item) => {
+                return <CourseCard data={item} />;
+              })}
+            </SimpleGrid>
+            <Center my={"md"}>
+              <AppPagination page={data.pageNumber} total={data.totalPages} />
+            </Center>
+          </>
+        )
+      )}
     </RootLayout>
   );
 }

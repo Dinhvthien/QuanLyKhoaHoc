@@ -1,4 +1,6 @@
-import { AppShell, Avatar, Burger, Group, Loader } from "@mantine/core";
+"use client"
+
+import { AppShell, Avatar, Burger, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { Suspense } from "react";
 import { DashboardNavbar } from "../Navbar/Dashboard/DashboardNavbar";

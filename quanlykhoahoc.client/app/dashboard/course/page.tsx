@@ -14,8 +14,8 @@ import {
   Text,
 } from "@mantine/core";
 import useSWR from "swr";
-import { SubjectClient, SubjectMapping } from "../../../web-api-client";
-import DashboardLayout from "../../../../components/Layout/DashboardLayout";
+import { CourseClient, CourseMapping } from "../../web-api-client";
+import DashboardLayout from "../../../components/Layout/DashboardLayout";
 import Link from "next/link";
 import { IconDots } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
@@ -24,11 +24,11 @@ import {
   useQuery,
   useSort,
   useFilter,
-} from "../../../../lib/helper";
-import AppPagination from "../../../../components/AppPagination/AppPagination";
+} from "../../../lib/helper";
+import AppPagination from "../../../components/AppPagination/AppPagination";
 import { useEffect, useState } from "react";
 
-interface SubjectMappingWithIndexSignature extends SubjectMapping {
+interface CourseMappingWithIndexSignature extends CourseMapping {
   [key: string]: any;
 }
 
@@ -45,10 +45,10 @@ const types = [
   { value: "<", label: "Tìm Kiếm Nhỏ Hơn" },
 ];
 
-const fields = Object.keys(new SubjectMapping().toJSON());
+const fields = Object.keys(new CourseMapping().toJSON());
 
-export default function CourseSubject() {
-  const SubjectService = new SubjectClient();
+export default function CourseCourse() {
+  const CourseService = new CourseClient();
   const query = useQuery();
   const handleSort = useSort();
   const handleFilter = useFilter();
@@ -68,9 +68,9 @@ export default function CourseSubject() {
   }, [filter, handleFilter]);
 
   const { data, isLoading, mutate } = useSWR(
-    `/api/subjects/${new URLSearchParams(query as any)}`,
+    `/api/courses/${new URLSearchParams(query as any)}`,
     () =>
-      SubjectService.getSubjects(
+      CourseService.getCourses(
         query.filters,
         query.sorts,
         query.page ? parseInt(query.page) : 1,
@@ -95,7 +95,7 @@ export default function CourseSubject() {
       labels: { confirm: "Chắc Chắn", cancel: "Hủy" },
       onConfirm: () =>
         handleSubmit(() => {
-          SubjectService.deleteSubject(id).then(() => {
+          CourseService.deleteCourse(id).then(() => {
             mutate();
           });
         }, "Xóa Thành Công"),
@@ -105,7 +105,7 @@ export default function CourseSubject() {
   return (
     <DashboardLayout>
       <Flex my={"sm"} justify={"end"} align={"center"} gap={"xs"}>
-        <Link href={"/dashboard/course/subject"}>
+        <Link href={"/dashboard/course"}>
           <Button color="red" size="xs">
             Clear
           </Button>
@@ -139,7 +139,7 @@ export default function CourseSubject() {
             }
           }}
         />
-        <Link href={"/dashboard/course/subject/create"}>
+        <Link href={"/dashboard/course/create"}>
           <Button ms={"auto"} size="xs">
             Tạo Mới
           </Button>
@@ -162,15 +162,7 @@ export default function CourseSubject() {
                 <Table.Tr key={item.name}>
                   {fields.map((field) => (
                     <Table.Td key={field} py={"md"}>
-                      {field === "isActive" ? (
-                        item.isActive ? (
-                          <Badge>Đang Kích Hoạt</Badge>
-                        ) : (
-                          <Badge color="red">Không Kích Hoạt</Badge>
-                        )
-                      ) : (
-                        (item as SubjectMappingWithIndexSignature)[field]
-                      )}
+                      {(item as CourseMappingWithIndexSignature)[field]}
                     </Table.Td>
                   ))}
                   <Table.Td>
@@ -182,7 +174,7 @@ export default function CourseSubject() {
                       </Menu.Target>
                       <Menu.Dropdown>
                         <Link
-                          href={`/dashboard/course/subject/${item.id}`}
+                          href={`/dashboard/course/${item.id}`}
                           style={{ textDecoration: "none" }}
                         >
                           <Menu.Item>Sửa</Menu.Item>

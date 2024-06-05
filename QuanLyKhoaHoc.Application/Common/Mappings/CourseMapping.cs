@@ -1,4 +1,6 @@
-﻿namespace QuanLyKhoaHoc.Application.Common.Mappings
+﻿using QuanLyKhoaHoc.Application.Common.Models;
+
+namespace QuanLyKhoaHoc.Application.Common.Mappings
 {
     public class CourseMapping
     {
@@ -9,8 +11,6 @@
         public string Introduce { get; set; } = default!;
 
         public string ImageCourse { get; set; } = default!;
-
-        public int CreatorId { get; set; }
 
         public string Code { get; set; } = default!;
 
@@ -23,14 +23,7 @@
         public int NumberOfPurchases { get; set; }
     }
 
-    public class CourseQuery
-    {
-        public int Page { get; set; }
-
-        public int Size { get; set; }
-
-        public int TotalPage { get; set; }
-    }
+    public class CourseQuery : QueryModel { }
 
     public class CourseCreate
     {
@@ -39,8 +32,6 @@
         public string Introduce { get; set; } = default!;
 
         public string ImageCourse { get; set; } = default!;
-
-        public int CreatorId { get; set; }
 
         public string Code { get; set; } = default!;
 

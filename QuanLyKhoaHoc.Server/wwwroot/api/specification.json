@@ -6,6 +6,202 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/Course": {
+      "get": {
+        "tags": [
+          "Course"
+        ],
+        "operationId": "Course_GetCourses",
+        "parameters": [
+          {
+            "name": "Filters",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Sorts",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 1.0,
+              "nullable": true
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagingModelOfCourseMapping"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Course"
+        ],
+        "operationId": "Course_CreateCourse",
+        "requestBody": {
+          "x-name": "entity",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseCreate"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Course"
+        ],
+        "operationId": "Course_UpdateCourse",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "entity",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseUpdate"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Course"
+        ],
+        "operationId": "Course_DeleteCourse",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Course/{id}": {
+      "get": {
+        "tags": [
+          "Course"
+        ],
+        "operationId": "Course_GetCourse",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseMapping"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Subject": {
       "get": {
         "tags": [
@@ -38,7 +234,8 @@
               "type": "integer",
               "format": "int32",
               "maximum": 2147483647.0,
-              "minimum": 1.0
+              "minimum": 1.0,
+              "nullable": true
             },
             "x-position": 3
           },
@@ -49,7 +246,8 @@
               "type": "integer",
               "format": "int32",
               "maximum": 2147483647.0,
-              "minimum": 1.0
+              "minimum": 1.0,
+              "nullable": true
             },
             "x-position": 4
           }
@@ -203,6 +401,187 @@
   },
   "components": {
     "schemas": {
+      "PagingModelOfCourseMapping": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CourseMapping"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CourseMapping": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "introduce": {
+            "type": "string"
+          },
+          "imageCourse": {
+            "type": "string"
+          },
+          "creatorId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "code": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalCourseDuration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfStudent": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfPurchases": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Result": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/ResultStatus"
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ResultStatus": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Succeess",
+          "Failure",
+          "NotFound",
+          "Forbidden"
+        ],
+        "enum": [
+          "Succeess",
+          "Failure",
+          "NotFound",
+          "Forbidden"
+        ]
+      },
+      "CourseCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "introduce": {
+            "type": "string"
+          },
+          "imageCourse": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalCourseDuration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfStudent": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfPurchases": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CourseUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "introduce": {
+            "type": "string"
+          },
+          "imageCourse": {
+            "type": "string"
+          },
+          "creatorId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "code": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalCourseDuration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfStudent": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfPurchases": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "PagingModelOfSubjectMapping": {
         "type": "object",
         "additionalProperties": false,
@@ -255,33 +634,6 @@
             "type": "boolean"
           }
         }
-      },
-      "Result": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "status": {
-            "$ref": "#/components/schemas/ResultStatus"
-          },
-          "error": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ResultStatus": {
-        "type": "string",
-        "description": "",
-        "x-enumNames": [
-          "Succeess",
-          "Failure",
-          "NotFound"
-        ],
-        "enum": [
-          "Succeess",
-          "Failure",
-          "NotFound"
-        ]
       },
       "SubjectCreate": {
         "type": "object",
