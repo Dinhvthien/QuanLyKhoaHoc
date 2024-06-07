@@ -1,5 +1,7 @@
 using Project1.Web.Services;
+using QuanLyKhoaHoc.Application.Common;
 using QuanLyKhoaHoc.Application.Common.Interfaces;
+using QuanLyKhoaHoc.Application.Common.Mappings;
 using QuanLyKhoaHoc.Application.Services;
 using QuanLyKhoaHoc.Infrastructure.Data;
 using System.Text.Json.Serialization;
@@ -17,7 +19,7 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 {
     x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
-builder.Services.AddScoped<IStatisticalService, StatisticalService>();
+
 
 var app = builder.Build();
 

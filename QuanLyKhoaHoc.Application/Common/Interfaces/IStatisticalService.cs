@@ -10,5 +10,8 @@ namespace QuanLyKhoaHoc.Application.Common.Interfaces
     public interface IStatisticalService
     {
         public Task<StatisticalMapping> GetStatisticalMappingAsync();
+        public Task<List<StatisticalMonthMapping>> GetStatisticalMounthMappingAsync(DateTime startDate, DateTime endDate);
+        public Task<List<CourseStatiscalMapping>> GettopCourseinMonth();
+        public Task<List<CourseStatiscalMapping>> GettopCourseinRange(DateTime startDate, DateTime endDate);
     }
 }
