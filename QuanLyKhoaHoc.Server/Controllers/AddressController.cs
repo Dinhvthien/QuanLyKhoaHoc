@@ -10,17 +10,22 @@ namespace QuanLyKhoaHoc.Server.Controllers
     [ApiController]
     public class AddressController : ControllerBase
     {
-        private readonly ApplicationServiceBase<AdressMapping, AdressQuery, createAdress, UpdateAdress> _context;
+        private readonly ApplicationServiceBase<AdressMapping, AdressQuery, CreateAdress, UpdateAdress> _context;
 
-        public AddressController(ApplicationServiceBase<AdressMapping, AdressQuery, createAdress, UpdateAdress> context)
+        public AddressController(ApplicationServiceBase<AdressMapping, AdressQuery, CreateAdress, UpdateAdress> context)
         {
             _context = context;
         }
 
         [HttpPost]
-        public async Task<Result> CreateAdress(createAdress entity, CancellationToken cancellationToken)
+        public async Task<Result> CreateAdress(CreateAdress entity, CancellationToken cancellationToken)
         {
             return await _context.Create(entity, cancellationToken);
+        }
+        [HttpPut]
+        public async Task<Result> UpdateAdress(UpdateAdress entity, CancellationToken cancellationToken)
+        {
+            return await _context.Updatemore(entity, cancellationToken);
         }
         [HttpGet]
         public async Task<PagingModel<AdressMapping>> GetAdress([FromQuery] AdressQuery query, CancellationToken cancellationToken)

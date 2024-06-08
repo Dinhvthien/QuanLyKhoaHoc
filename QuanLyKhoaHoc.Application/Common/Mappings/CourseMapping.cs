@@ -1,4 +1,5 @@
 ﻿using QuanLyKhoaHoc.Application.Common.Models;
+using QuanLyKhoaHoc.Domain.Entities;
 
 namespace QuanLyKhoaHoc.Application.Common.Mappings
 {
@@ -15,6 +16,8 @@ namespace QuanLyKhoaHoc.Application.Common.Mappings
         public string Code { get; set; } = default!;
 
         public decimal Price { get; set; }
+        public List<SubjectMapping> Subject { get; set; }
+
 
         public int TotalCourseDuration { get; set; }
 
@@ -36,6 +39,8 @@ namespace QuanLyKhoaHoc.Application.Common.Mappings
         public string Code { get; set; } = default!;
 
         public decimal Price { get; set; }
+        public List<int> SubjectId { get; set; }
+
 
         public int TotalCourseDuration { get; set; }
 
@@ -59,7 +64,7 @@ namespace QuanLyKhoaHoc.Application.Common.Mappings
         public string Code { get; set; } = default!;
 
         public decimal Price { get; set; }
-
+        public List<int> Subject { get; set; }
         public int TotalCourseDuration { get; set; }
 
         public int NumberOfStudent { get; set; }

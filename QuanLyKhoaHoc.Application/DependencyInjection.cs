@@ -12,7 +12,7 @@ public static class DependencyInjection
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddScoped<ApplicationServiceBase<SubjectMapping, SubjectQuery, SubjectCreate, SubjectUpdate>, SubjectService>();
         services.AddScoped<ApplicationServiceBase<CourseMapping, CourseQuery, CourseCreate, CourseUpdate>, CourseService>();
-        services.AddScoped<ApplicationServiceBase<AdressMapping, AdressQuery, createAdress, UpdateAdress>, AdressService>();
+        services.AddScoped<ApplicationServiceBase<AdressMapping, AdressQuery, CreateAdress, UpdateAdress>, AdressService>();
         services.AddScoped<IStatisticalService, StatisticalService>();
         return services;
     }

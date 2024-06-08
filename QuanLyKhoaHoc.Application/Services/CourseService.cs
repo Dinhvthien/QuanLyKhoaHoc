@@ -19,8 +19,23 @@ namespace QuanLyKhoaHoc.Application.Services
         {
             try
             {
-                if(_user.Id == null) return new Result(Domain.ResultStatus.Forbidden, "Bạn Chưa Đăng Nhập");
+                if (_user.Id == null) return new Result(Domain.ResultStatus.Forbidden, "Bạn Chưa Đăng Nhập");
+                var getCertificate = await _context.Certificates.SingleOrDefaultAsync(c => c.Id == _user.Certificateid, cancellation);
+                if (getCertificate == null)
+                {
+                    return new Result(Domain.ResultStatus.Forbidden, "Bạn Chưa Có chứng chỉ giảng viên");
+                }
+                var getCertificateType = await _context.CertificateTypes.SingleOrDefaultAsync(c => c.Id == getCertificate.CertificateTypeId, cancellation);
 
+                if (getCertificateType == null)
+                {
+                    return new Result(Domain.ResultStatus.Forbidden, "Bạn Chưa Có chứng chỉ giảng viên");
+                }
+
+                if (!getCertificateType.Name.Trim().Equals("giang vien", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return new Result(Domain.ResultStatus.Forbidden, "Bạn Chưa Có chứng chỉ giảng viên");
+                }
                 var course = _mapper.Map<Course>(entity);
 
                 course.CreatorId = int.Parse(_user.Id);
@@ -30,6 +45,21 @@ namespace QuanLyKhoaHoc.Application.Services
                 var result = await _context.SaveChangesAsync(cancellation);
 
                 if (result != 1)
+                {
+                    return Result.Failure("Lỗi Gì Đó");
+                }
+                var Coursesb = new List<CourseSubject>();
+                foreach (var item in entity.SubjectId)
+                {
+                    var CourseSubject = new CourseSubject();
+                    CourseSubject.SubjectId = item;
+                    CourseSubject.CourseId = course.Id;
+                    Coursesb.Add(CourseSubject);
+                }
+
+                await _context.CourseSubjects.AddRangeAsync(Coursesb, cancellation);
+                var resultCourseSubjects = await _context.SaveChangesAsync(cancellation);
+                if (resultCourseSubjects != 1)
                 {
                     return Result.Failure("Lỗi Gì Đó");
                 }
@@ -59,7 +89,13 @@ namespace QuanLyKhoaHoc.Application.Services
                 {
                     return new Result(Domain.ResultStatus.Forbidden, "Bạn Không Thể Xóa Khóa Học Này");
                 }
-
+                var findAllCoursesSb = _context.CourseSubjects.Where(x => x.CourseId == course.Id).ToList();
+                _context.CourseSubjects.RemoveRange(findAllCoursesSb);
+                var resultCourseSubjects = await _context.SaveChangesAsync(cancellation);
+                if (resultCourseSubjects != 1)
+                {
+                    return Result.Failure("Lỗi Gì Đó");
+                }
                 _context.Courses.Remove(course);
 
                 var result = await _context.SaveChangesAsync(cancellation);
@@ -79,9 +115,10 @@ namespace QuanLyKhoaHoc.Application.Services
 
         public override async Task<PagingModel<CourseMapping>> Get(CourseQuery query, CancellationToken cancellation)
         {
-            var courses = _context.Courses.AsNoTracking();
+            var courses = _context.Courses.AsNoTracking().Include(c => c.CourseSubjects)
+            .ThenInclude(cs => cs.Subject); ;
 
-            var totalCount = await courses.ApplyQuery(query, applyPagination: false).CountAsync();
+            var totalCount = await courses.ApplyQuery(query, applyPagination: false).CountAsync(cancellation);
 
             var data = await courses
                 .ApplyQuery(query)
@@ -125,6 +162,42 @@ namespace QuanLyKhoaHoc.Application.Services
                 {
                     return new Result(Domain.ResultStatus.Forbidden, "Bạn Không Thể Sửa Khóa Học Này");
                 }
+                var existingCourseSubjects = _context.CourseSubjects.Where(c => c.CourseId == course.Id).ToList();
+
+                var existingSubjectIds = existingCourseSubjects.Select(cs => cs.SubjectId).ToList();
+                var newSubjectIds = entity.Subject;
+
+                // Các Subject cần thêm
+                var subjectsToAdd = newSubjectIds.Except(existingSubjectIds).ToList();
+
+                // Các Subject cần xóa      
+                var subjectsToRemove = existingSubjectIds.Except(newSubjectIds).ToList();
+
+                // Thêm các Subject mới
+                foreach (var subjectId in subjectsToAdd)
+                {
+                    var courseSubjectexit = existingCourseSubjects.FirstOrDefault(cs => cs.SubjectId == subjectId);
+                    if (courseSubjectexit != null)
+                    {
+                        return new Result(Domain.ResultStatus.NotFound, $"Subject {subjectId} không tồn tại");
+                    }
+                    var courseSubject = new CourseSubject
+                    {
+                        CourseId = course.Id,
+                        SubjectId = subjectId
+                    };
+                    _context.CourseSubjects.Add(courseSubject);
+                }
+
+                // Xóa các Subject không còn trong entity
+                foreach (var subjectId in subjectsToRemove)
+                {
+                    var courseSubject = existingCourseSubjects.FirstOrDefault(cs => cs.SubjectId == subjectId);
+                    if (courseSubject != null)
+                    {
+                        _context.CourseSubjects.Remove(courseSubject);
+                    }
+                }
 
                 _mapper.Map(entity, course);
 
@@ -143,6 +216,11 @@ namespace QuanLyKhoaHoc.Application.Services
             {
                 return Result.Failure(ex.Message);
             }
+        }
+
+        public override Task<Result> Updatemore(CourseUpdate entity, CancellationToken cancellation)
+        {
+            throw new NotImplementedException();
         }
     }
 }

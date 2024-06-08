@@ -26,6 +26,8 @@ namespace QuanLyKhoaHoc.Application.Common
         public abstract Task<Result> Create(CreateModel entity, CancellationToken cancellation);
 
         public abstract Task<Result> Update(int id, UpdateModel entity, CancellationToken cancellation);
+        public abstract Task<Result> Updatemore(UpdateModel entity, CancellationToken cancellation);
+
 
         public abstract Task<Result> Delete(int id, CancellationToken cancellation);
     }

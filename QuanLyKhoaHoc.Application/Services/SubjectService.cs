@@ -69,7 +69,7 @@ namespace QuanLyKhoaHoc.Application.Services
         {
             var subjects = _context.Subjects.AsNoTracking();
 
-            var totalCount = await subjects.ApplyQuery(query, applyPagination: false).CountAsync();
+            var totalCount = await subjects.ApplyQuery(query, applyPagination: false).CountAsync(cancellationToken: cancellation);
 
             var data = await subjects
                 .ApplyQuery(query)
@@ -124,6 +124,11 @@ namespace QuanLyKhoaHoc.Application.Services
             {
                 return Result.Failure(ex.Message);
             }
+        }
+
+        public override Task<Result> Updatemore(SubjectUpdate entity, CancellationToken cancellation)
+        {
+            throw new NotImplementedException();
         }
     }
 }

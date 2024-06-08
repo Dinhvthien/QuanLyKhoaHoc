@@ -10,6 +10,8 @@ namespace QuanLyKhoaHoc.Application.Common.Interfaces
         Task<Result> Create(CreateModel entity, CancellationToken cancellation);
 
         Task<Result> Update(int id, UpdateModel entity, CancellationToken cancellation);
+        Task<Result> Updatemore(UpdateModel entity, CancellationToken cancellation);
+
 
         Task<Result> Delete(int id, CancellationToken cancellation);
     }

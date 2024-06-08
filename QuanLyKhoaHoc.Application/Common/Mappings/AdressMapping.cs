@@ -15,7 +15,7 @@ namespace QuanLyKhoaHoc.Application.Common.Mappings
     }
     public class AdressQuery : QueryModel { }
 
-    public class createAdress
+    public class CreateAdress
     {
         public string NameProvince { get; set; } = "";
         public string NameDisTrict { get; set; } = "";
