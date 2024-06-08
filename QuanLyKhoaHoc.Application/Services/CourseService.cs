@@ -21,21 +21,21 @@ namespace QuanLyKhoaHoc.Application.Services
             {
                 if (_user.Id == null) return new Result(Domain.ResultStatus.Forbidden, "Bạn Chưa Đăng Nhập");
                 var getCertificate = await _context.Certificates.SingleOrDefaultAsync(c => c.Id == _user.Certificateid, cancellation);
-                if (getCertificate == null)
-                {
-                    return new Result(Domain.ResultStatus.Forbidden, "Bạn Chưa Có chứng chỉ giảng viên");
-                }
-                var getCertificateType = await _context.CertificateTypes.SingleOrDefaultAsync(c => c.Id == getCertificate.CertificateTypeId, cancellation);
+                //if (getCertificate == null)
+                //{
+                //    return new Result(Domain.ResultStatus.Forbidden, "Bạn Chưa Có chứng chỉ giảng viên");
+                //}
+                //var getCertificateType = await _context.CertificateTypes.SingleOrDefaultAsync(c => c.Id == getCertificate.CertificateTypeId, cancellation);
 
-                if (getCertificateType == null)
-                {
-                    return new Result(Domain.ResultStatus.Forbidden, "Bạn Chưa Có chứng chỉ giảng viên");
-                }
+                //if (getCertificateType == null)
+                //{
+                //    return new Result(Domain.ResultStatus.Forbidden, "Bạn Chưa Có chứng chỉ giảng viên");
+                //}
 
-                if (!getCertificateType.Name.Trim().Equals("giang vien", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    return new Result(Domain.ResultStatus.Forbidden, "Bạn Chưa Có chứng chỉ giảng viên");
-                }
+                //if (!getCertificateType.Name.Trim().Equals("giang vien", StringComparison.CurrentCultureIgnoreCase))
+                //{
+                //    return new Result(Domain.ResultStatus.Forbidden, "Bạn Chưa Có chứng chỉ giảng viên");
+                //}
                 var course = _mapper.Map<Course>(entity);
 
                 course.CreatorId = int.Parse(_user.Id);
@@ -199,16 +199,16 @@ namespace QuanLyKhoaHoc.Application.Services
                     }
                 }
 
-                _mapper.Map(entity, course);
+                //_mapper.Map(entity, course);
 
                 _context.Courses.Update(course);
 
                 var result = await _context.SaveChangesAsync(cancellation);
 
-                if (result != 1)
-                {
-                    return Result.Failure("Lỗi Gì Đó");
-                }
+                //if (result != 1)
+                //{
+                //    return Result.Failure("Lỗi Gì Đó");
+                //}
 
                 return Result.Success();
             }
