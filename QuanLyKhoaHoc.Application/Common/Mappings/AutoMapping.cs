@@ -9,19 +9,21 @@ namespace QuanLyKhoaHoc.Application.Common.Mappings
         {
             CreateMap<Course, CourseMapping>()
             .ForMember(dest => dest.Subject, opt => opt.MapFrom(src => src.CourseSubjects.Select(cs => cs.Subject)));
+            CreateMap<Course, CourseCreate>().ReverseMap();
+            CreateMap<Course, CourseUpdate>().ReverseMap();
             CreateMap<Subject, SubjectMapping>().ReverseMap();
             CreateMap<Subject, SubjectCreate>().ReverseMap();
             CreateMap<Subject, SubjectUpdate>().ReverseMap();
 
-         
-            CreateMap<Course, CourseCreate>().ReverseMap();
-            CreateMap<Course, CourseUpdate>().ReverseMap();
+            CreateMap<SubjectDetail, SubjectDetailMapping>().ReverseMap();
+            CreateMap<SubjectDetail, SubjectDetailCreate>().ReverseMap();
+            CreateMap<SubjectDetail, SubjectDetailUpdate>().ReverseMap();
 
             CreateMap<Province, AdressMapping>().ReverseMap();
             CreateMap<Ward, AdressMapping>().ReverseMap();
             CreateMap<District, AdressMapping>().ReverseMap();
 
-            CreateMap<Province,CreateAdress>().ReverseMap();
+            CreateMap<Province, CreateAdress>().ReverseMap();
             CreateMap<Ward, CreateAdress>().ReverseMap();
             CreateMap<District, CreateAdress>().ReverseMap();
 

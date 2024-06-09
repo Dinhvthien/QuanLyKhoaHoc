@@ -17,5 +17,6 @@
         public DateTime CreateTime { get; set; }
 
         public User User { get; set; } = default!;
+
     }
 }

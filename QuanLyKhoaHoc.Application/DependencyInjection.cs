@@ -2,6 +2,7 @@
 using QuanLyKhoaHoc.Application.Common.Interfaces;
 using QuanLyKhoaHoc.Application.Common.Mappings;
 using QuanLyKhoaHoc.Application.Services;
+using QuanLyKhoaHoc.Domain.Entities;
 using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,7 @@ public static class DependencyInjection
         services.AddScoped<ApplicationServiceBase<SubjectMapping, SubjectQuery, SubjectCreate, SubjectUpdate>, SubjectService>();
         services.AddScoped<ApplicationServiceBase<CourseMapping, CourseQuery, CourseCreate, CourseUpdate>, CourseService>();
         services.AddScoped<ApplicationServiceBase<AdressMapping, AdressQuery, CreateAdress, UpdateAdress>, AdressService>();
+        services.AddScoped<ApplicationServiceBase<SubjectDetailMapping, SubjectDetailQuery, SubjectDetailCreate, SubjectDetailUpdate>, SubjectDetailService>();
         services.AddScoped<IStatisticalService, StatisticalService>();
         return services;
     }
