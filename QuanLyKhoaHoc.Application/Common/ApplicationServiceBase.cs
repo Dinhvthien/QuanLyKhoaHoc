@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using QuanLyKhoaHoc.Application.Common.Interfaces;
+using QuanLyKhoaHoc.Application.Common.Mappings;
 using QuanLyKhoaHoc.Application.Common.Models;
 
 namespace QuanLyKhoaHoc.Application.Common

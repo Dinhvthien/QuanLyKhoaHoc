@@ -31,8 +31,7 @@ namespace QuanLyKhoaHoc.Application.Services
                 {
                     return new Result(Domain.ResultStatus.Forbidden, "Bạn Chưa Có chứng chỉ giảng viên");
                 }
-
-                if (!getCertificateType.Name.Trim().Equals("giang vien", StringComparison.CurrentCultureIgnoreCase))
+                if (getCertificateType.Id != 1)
                 {
                     return new Result(Domain.ResultStatus.Forbidden, "Bạn Chưa Có chứng chỉ giảng viên");
                 }
@@ -149,7 +148,7 @@ namespace QuanLyKhoaHoc.Application.Services
             .ThenInclude(cs => cs.Subject); ;
 
             var totalCount = await courses.ApplyQuery(query, applyPagination: false).CountAsync(cancellation);
-
+                
             var data = await courses
                 .ApplyQuery(query)
                 .ProjectTo<CourseMapping>(_mapper.ConfigurationProvider)
@@ -193,7 +192,6 @@ namespace QuanLyKhoaHoc.Application.Services
                     return new Result(Domain.ResultStatus.Forbidden, "Bạn Không Thể Sửa Khóa Học Này");
                 }
                 var existingCourseSubjects = _context.CourseSubjects.Where(c => c.CourseId == course.Id).ToList();
-
                 var existingSubjectIds = existingCourseSubjects.Select(cs => cs.SubjectId).ToList();
                 var newSubjectIds = entity.Subject;
 

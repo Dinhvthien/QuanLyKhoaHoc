@@ -2,7 +2,7 @@
 {
     public enum UserStatus
     {
-        Active
+        Active,Block    
     }
 
     public enum Level
